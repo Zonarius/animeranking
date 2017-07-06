@@ -31,6 +31,13 @@ module.exports = {
       '/api/v1': {
         target: 'https://mesh.zonari.us:443',
         changeOrigin: true
+      },
+      '/images': {
+        target: 'https://mesh.zonari.us:443',
+        changeOrigin: true,
+        pathRewrite: {
+          '^': '/api/v1/animeranking/webroot'
+        }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
