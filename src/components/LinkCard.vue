@@ -1,5 +1,5 @@
 <template>
-  <a :href="link">
+  <a @click.prevent="goto(link)" :href="link">
     <div class="card year">
       <div class="card-image">
         <figure class="image" :class="figureClass">
@@ -18,9 +18,14 @@
 </template>
 
 <script>
+import {goto} from '../services/api'
+
 export default {
   name: 'LinkCard',
-  props: ['link', 'image', 'figureClass']
+  props: ['link', 'image', 'figureClass'],
+  methods: {
+    goto
+  }
 }
 </script>
 

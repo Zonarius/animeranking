@@ -8,7 +8,7 @@
         </draggable>
       </div>
       <section>
-        {{animeCount}} Anime gesamt
+        loggedIn: {{loggedIn}} {{animeCount}} Anime gesamt
       </section>
     </div>
   </section>
@@ -19,24 +19,27 @@
 import draggable from 'vuedraggable';
 import Tier from './Tier';
 import Reference from './Reference';
+import { loggedIn } from '../services/api'
 
 export default {
   name: 'season',
   props: ['node'],
-  data() {
-    return {
-      loggedIn: false
-    }
+  subscriptions: {
+    loggedIn
   },
   computed: {
     draggableOptions() {
       return {
-        disabled: this.loggedIn,
+        disabled: !this.loggedIn,
         handle: '.handle'
       };
     },
     animeCount() {
-      return this.node.fields.anime.filter(it => it.__typename === 'reference').length;
+      if (this.node.fields.anime) {
+        return this.node.fields.anime.filter(it => it.__typename === 'reference').length;
+      } else {
+        return 0;
+      }
     }
   },
   components: {

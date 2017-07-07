@@ -4,7 +4,6 @@
       <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
     </div>
     <figure class="media-left">
-  
       <p class="image">
         <img :src="node.fields.thumbnailUrl">
       </p>

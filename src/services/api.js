@@ -1,4 +1,10 @@
-import bus from './bus'
+import { Observable } from 'rxjs/Observable'
+import { Subject } from 'rxjs/Subject'
+import { BehaviorSubject } from 'rxjs/BehaviorSubject'
+import 'rxjs/add/operator/take'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/observable/fromEvent'
+import 'rxjs/add/observable/merge'
 
 const graphql = "/api/v1/animeranking/graphql"
 const graphInit = {
@@ -89,20 +95,33 @@ fragment breadcrumb on Node {
   }
 }
 `
-
-let loggedIn = false;
-
-export function isLoggedIn() {
-  return loggedIn;
-}
+export var loggedIn = new BehaviorSubject()
+var nodeReceived = new Subject()
+export var currentNode = Observable.merge(
+  nodeReceived,
+  Observable.fromEvent(window, 'popstate').map(ev => ev.state)
+)
 
 export function login() {
-  loggedIn = true;
-  bus.$emit('login')
+  loggedIn.next(true)
+}
+
+export function checkLoginState() {
+  get('/api/v1/auth/me').then(res => loggedIn.next(res.username !== 'anonymous'))
 }
 
 export function webroot(path) {
-  return query(webrootQuery, { path })
+  query(webrootQuery, { path }).then(node => nodeReceived.next(node.data.node))
+}
+
+export function goto(path) {
+  history.pushState({}, null, path)
+  nodeReceived.take(1).subscribe(node => history.replaceState(node, null, path))
+  webroot(path)
+}
+
+function get(path) {
+  return fetch(path).then(res => res.json())
 }
 
 function query(q, variables) {

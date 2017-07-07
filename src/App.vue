@@ -8,12 +8,12 @@
             <nav v-if="!isRoot" class="breadcrumb">
               <ul v-if="currentNode">
                 <li :class="{'is-active': isRoot}">
-                  <a href="/">
+                  <a @click.prevent="goto('/')" href="/">
                     <i class="fa fa-home" aria-hidden="true"></i>
                   </a>
                 </li>
                 <li v-for="crumb in currentNode.breadcrumb" :key="crumb.uuid">
-                  <a :href="crumb.path">{{crumb.fields.name}}</a>
+                  <a @click.prevent="goto(crumb.path)" :href="crumb.path">{{crumb.fields.name}}</a>
                 </li>
                 <li v-if="!isRoot" class="is-active">
                   <a>{{currentNode.fields.name}}</a>
@@ -37,57 +37,36 @@
 import Root from './components/Root'
 import Year from './components/Year'
 import Season from './components/Season'
-import { webroot, login } from './services/api'
-
-let data = {
-  loading: false,
-  currentView: '',
-  currentNode: undefined
-}
-
-function onlySchema(schemaName) {
-  return (result) => {
-    result.data.node.children.elements = result.data.node.children.elements.filter(it => it.fields.__typename === schemaName)
-    return result
-  }
-}
+import * as api from './services/api'
+import { Observable } from 'rxjs/Observable'
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/do'
+import 'rxjs/add/operator/startWith'
+import 'rxjs/add/observable/fromEvent'
 
 export default {
   name: 'app',
-  data: function () {
-    return data
-  },
-  computed: {
-    isRoot() {
-      return location.pathname === '/';
-    }
-  },
   methods: {
-    navigate: function (event) {
-      event.preventDefault();
-      console.log(event)
-      this.loading = true;
-      this.currentView = undefined;
-      history.pushState(undefined, undefined, event.srcElement.pathname);
-    },
-    login
+    login: api.login,
+    goto: api.goto
   },
   components: {
     Root, Year, Season
   },
+  subscriptions() {
+    return {
+      isRoot: api.currentNode.map(it => location.pathname === '/'),
+      currentNode: api.currentNode,
+      currentView: api.currentNode.map(it => this.isRoot ? 'root' : it.fields.__typename)
+    }
+  },
   created: function () {
-    this.loading = true;
-    webroot(location.pathname).then(onlySchema('year')).then(node => {
-      this.loading = false;
-      this.currentNode = node.data.node;
-      if (location.pathname === '/') {
-        this.currentView = 'root'
-      } else {
-        this.currentView = node.data.node.fields.__typename
-      }
-    })
+    api.webroot(location.pathname)
+    api.checkLoginState()
   }
 }
+
+
 </script>
 
 <style lang="scss" src="bulma"></style>
