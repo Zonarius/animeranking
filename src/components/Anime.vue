@@ -1,6 +1,6 @@
 <template>
   <article class="media">
-    <div class="handle">
+    <div class="handle" v-if="loggedIn">
       <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
     </div>
     <figure class="media-left">
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import * as api from '../api'
 export default {
   name: 'anime',
   props: ['node', 'place'],
@@ -32,6 +33,9 @@ export default {
     malLink() {
       return `https://myanimelist.net/anime/${this.node.fields.malId}`;
     }
+  },
+  subscriptions: {
+    loggedIn: api.loggedIn
   }
 }
 </script>

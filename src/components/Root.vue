@@ -12,7 +12,7 @@
 
 <script>
 import LinkCard from './LinkCard'
-import { isLoggedIn } from '../services/api.js'
+import { isLoggedIn } from '../api.js'
 
 export default {
   name: 'root',

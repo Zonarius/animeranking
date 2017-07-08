@@ -2,13 +2,13 @@
   <section>
     <div class="container">
       <div class="content">
-        <draggable :options="draggableOptions" v-model="node.fields.anime">
+        <draggable :options="draggableOptions" v-model="node.fields.anime" @end="save">
           <component v-for="(micronode, index) in node.fields.anime" :key="index" :is="micronode.__typename" :node="micronode" :place="place(index)">
           </component>
         </draggable>
       </div>
       <section>
-        loggedIn: {{loggedIn}} {{animeCount}} Anime gesamt
+        {{animeCount}} Anime gesamt
       </section>
     </div>
   </section>
@@ -19,7 +19,7 @@
 import draggable from 'vuedraggable';
 import Tier from './Tier';
 import Reference from './Reference';
-import { loggedIn } from '../services/api'
+import { loggedIn, save } from '../api'
 
 export default {
   name: 'season',
@@ -46,9 +46,6 @@ export default {
     draggable, Tier, Reference
   },
   methods: {
-    output() {
-      console.log(JSON.stringify(this.node.fields.anime))
-    },
     place(index) {
       let array = this.node.fields.anime;
       let place = index + 1;

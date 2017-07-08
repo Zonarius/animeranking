@@ -95,19 +95,28 @@ fragment breadcrumb on Node {
   }
 }
 `
-export var loggedIn = new BehaviorSubject()
+
 var nodeReceived = new Subject()
+
+export var currentUser = new BehaviorSubject()
+export var loggedIn = currentUser.map(it => it && it.username !== 'anonymous')
 export var currentNode = Observable.merge(
   nodeReceived,
   Observable.fromEvent(window, 'popstate').map(ev => ev.state)
 )
 
-export function login() {
-  loggedIn.next(true)
+export function login(username, password) {
+  post('/api/v1/auth/login', { username, password })
+    .then(user => fetchCurrentUser())
+    .catch(response => {
+      if (response.status !== 401) {
+        throw response
+      }
+    })
 }
 
-export function checkLoginState() {
-  get('/api/v1/auth/me').then(res => loggedIn.next(res.username !== 'anonymous'))
+export function fetchCurrentUser() {
+  get('/api/v1/auth/me').then(res => currentUser.next(res))
 }
 
 export function webroot(path) {
@@ -121,7 +130,31 @@ export function goto(path) {
 }
 
 function get(path) {
-  return fetch(path).then(res => res.json())
+  return fetch(path, {
+    credentials: "same-origin"
+  }).then(resMapper)
+}
+
+function post(path, data) {
+  return fetch(path, {
+    credentials: "same-origin",
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  }).then(resMapper)
+}
+
+function resMapper(res) {
+  return res.json()
+    .then(body => {
+      if (res.ok) {
+        return body
+      } else {
+        return { status: res.status, body }
+      }
+    })
 }
 
 function query(q, variables) {

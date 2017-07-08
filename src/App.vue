@@ -25,11 +25,8 @@
       </section>
       <component :is="currentView" :node="currentNode"></component>
     </div>
-    <footer class="footer">
-      <div class="container">
-        <a @click="login">Login</a>
-      </div>
-    </footer>
+    <MyFooter>
+    </MyFooter>
   </div>
 </template>
 
@@ -37,12 +34,9 @@
 import Root from './components/Root'
 import Year from './components/Year'
 import Season from './components/Season'
-import * as api from './services/api'
-import { Observable } from 'rxjs/Observable'
+import MyFooter from './components/MyFooter'
+import * as api from './api'
 import 'rxjs/add/operator/map'
-import 'rxjs/add/operator/do'
-import 'rxjs/add/operator/startWith'
-import 'rxjs/add/observable/fromEvent'
 
 export default {
   name: 'app',
@@ -51,7 +45,7 @@ export default {
     goto: api.goto
   },
   components: {
-    Root, Year, Season
+    Root, Year, Season, MyFooter
   },
   subscriptions() {
     return {
@@ -62,7 +56,7 @@ export default {
   },
   created: function () {
     api.webroot(location.pathname)
-    api.checkLoginState()
+    api.fetchCurrentUser()
   }
 }
 
@@ -82,5 +76,9 @@ export default {
 
 .hero {
   margin-bottom: 10px;
+}
+
+.footer {
+  margin-top: 10px;
 }
 </style>
