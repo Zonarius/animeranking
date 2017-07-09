@@ -1,5 +1,5 @@
 <template>
-  <section class="section">
+  <section class="section season">
     <div class="container">
       <div class="content" v-if="restNode">
         <draggable :options="draggableOptions" v-model="restNode.fields.anime" @end="save(restNode)">
@@ -96,5 +96,9 @@ export default {
   font-size: 30px;
   color: lightgrey;
   width: 20px;
+}
+
+.season {
+  overflow-x: scroll;
 }
 </style>
