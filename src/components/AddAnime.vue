@@ -1,5 +1,5 @@
 <template>
-  <div class="field is-grouped">
+  <div class="field is-grouped add-anime">
     <p class="control is-expanded" :class="{'is-loading': loading}">
       <v-autocomplete :items="suggestions" v-model="item" :get-label="getLabel" :auto-select-one-item="false" :component-item='template' @change="updateItems" placeholder="Suche..." input-class="input" :disabled="loading" @item-selected="add">
       </v-autocomplete>
@@ -74,8 +74,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-.v-autocomplete .v-autocomplete-list {
+<style lang="scss">
+.add-anime .v-autocomplete .v-autocomplete-list {
   position: static;
 }
 </style>

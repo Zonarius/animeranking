@@ -11,6 +11,7 @@
           <p class="title">
             {{item.name}}
           </p>
+          <p class="subtitle">MAL Score: {{item.payload.score}}</p>
         </div>
       </div>
     </div>
