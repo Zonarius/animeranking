@@ -24,7 +24,11 @@ export default {
   name: 'LinkCard',
   props: ['link', 'image', 'figureClass'],
   methods: {
-    goto
+    goto() {
+      if (this.link) {
+        goto(this.link)
+      }
+    }
   }
 }
 </script>

@@ -1,12 +1,8 @@
-import { Observable } from 'rxjs/Observable'
-import { Subject } from 'rxjs/Subject'
-import { BehaviorSubject } from 'rxjs/BehaviorSubject'
-import 'rxjs/add/operator/take'
-import 'rxjs/add/operator/map'
-import 'rxjs/add/observable/fromEvent'
-import 'rxjs/add/observable/merge'
+import Rx from 'rxjs/Rx'
+import axios from 'axios'
 
-const graphql = "/api/v1/animeranking/graphql"
+const project = 'animeranking'
+const graphql = `/api/v1/${project}/graphql`
 const graphInit = {
   method: "POST"
 }
@@ -14,15 +10,16 @@ const graphInit = {
 const webrootQuery =
   `
 query webroot($path: String) {
-  node(path: $path) {
+  node(path: $path) {    
     uuid
     version
+    language
     breadcrumb {
       ... breadcrumb
     }
     fields {
       ...field
-      ... on season {
+      ... on season {        
         anime {
           ... on reference {
             reference {
@@ -66,7 +63,7 @@ fragment field on Fields {
       path
     }
   }
-  ... on season {
+  ... on season {    
     name
     anime {
       ...micronode
@@ -96,14 +93,16 @@ fragment breadcrumb on Node {
 }
 `
 
-var nodeReceived = new Subject()
+var nodeReceived = new Rx.Subject()
 
-export var currentUser = new BehaviorSubject()
+export var currentUser = new Rx.BehaviorSubject()
 export var loggedIn = currentUser.map(it => it && it.username !== 'anonymous')
-export var currentNode = Observable.merge(
+export var currentNode = Rx.Observable.merge(
   nodeReceived,
-  Observable.fromEvent(window, 'popstate').map(ev => ev.state)
+  Rx.Observable.fromEvent(window, 'popstate').map(ev => ev.state)
 )
+
+export var nodeUpdated = new Rx.Subject()
 
 export function login(username, password) {
   post('/api/v1/auth/login', { username, password })
@@ -129,6 +128,49 @@ export function goto(path) {
   webroot(path)
 }
 
+export function graphToRest(nodeObs) {
+  return nodeObs.switchMap(node => Rx.Observable.fromPromise(getNode(node.uuid)))
+}
+
+export function getNode(uuid) {
+  return get(`/api/v1/${project}/nodes/${uuid}`)
+}
+
+export function createNode(node) {
+  return post(`/api/v1/${project}/nodes`, node)
+}
+
+export function nodeRx(uuid) {
+  return Rx.Observable.merge(
+    Rx.Observable.fromPromise(getNode(uuid)),
+    nodeUpdated.filter(node => node.uuid === uuid)
+  )
+}
+
+export function save(node) {
+  return post(`/api/v1/${project}/nodes/${node.uuid}`, node).then(node => {
+    nodeUpdated.next(node)
+    return node
+  })
+}
+
+export function deleteNode(uuid) {
+  return rdelete(`/api/v1/${project}/nodes/${uuid}`)
+}
+
+let cancelSearch
+export function searchAnime(input) {
+  if (cancelSearch) {
+    cancelSearch()
+  }
+  return axios.get(`/search/prefix.json?type=anime&keyword=${input}&v=1`, {
+    cancelToken: new axios.CancelToken(c => cancelSearch = c)
+  }).then(result => {
+    cancelSearch = undefined
+    return result.data.categories[0].items
+  })
+}
+
 function get(path) {
   return fetch(path, {
     credentials: "same-origin"
@@ -144,6 +186,13 @@ function post(path, data) {
     },
     body: JSON.stringify(data)
   }).then(resMapper)
+}
+
+function rdelete(path) {
+  return fetch(path, {
+    method: 'DELETE',
+    credentials: "same-origin"
+  })
 }
 
 function resMapper(res) {
@@ -167,3 +216,12 @@ function query(q, variables) {
   }).then(result => result.json())
 }
 
+export function catchCancel(err) {
+  if (!axios.isCancel(err)) {
+    throw err
+  }
+}
+export function l(o) {
+  console.log(JSON.stringify(o, undefined, 2))
+  return o
+}

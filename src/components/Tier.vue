@@ -1,16 +1,29 @@
 <template>
   <h1>
-    {{node.name}}
+    {{micronode.fields.name}}
+    <a v-if="loggedIn" @click="$emit('delete')" class="delete is-medium"></a>
   </h1>
 </template>
 
 <script>
+import * as api from '../api'
+
 export default {
   name: 'tier',
-  props: ['node']
+  props: ['micronode'],
+  subscriptions: {
+    loggedIn: api.loggedIn
+  }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+.delete {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
 
+h1:hover .delete {
+  opacity: 1;
+}
 </style>

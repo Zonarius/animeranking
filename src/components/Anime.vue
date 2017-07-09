@@ -14,10 +14,11 @@
           <i class="fa fa-trophy" aria-hidden="true"></i>
         </div>
         <div class="column">
-          <a :href="malLink" target="_blank">
-            <p class="title">{{node.fields.name}}</p>
-            <p class="subtitle">MAL Score: {{node.fields.malScore}}</p>
-          </a>
+          <p class="title">
+            <a :href="malLink" target="_blank">{{node.fields.name}}</a>
+            <a v-if="loggedIn" @click="remove" class="delete is-medium"></a>
+          </p>
+          <p class="subtitle">MAL Score: {{node.fields.malScore}}</p>
         </div>
       </div>
     </div>
@@ -36,6 +37,12 @@ export default {
   },
   subscriptions: {
     loggedIn: api.loggedIn
+  },
+  methods: {
+    remove() {
+      this.$emit('delete')
+      api.deleteNode(this.node.uuid)
+    }
   }
 }
 </script>
@@ -68,5 +75,14 @@ export default {
 
 .place3 {
   color: #CD7F32
+}
+
+.delete {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+article:hover .delete {
+  opacity: 1;
 }
 </style>

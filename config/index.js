@@ -38,6 +38,10 @@ module.exports = {
         pathRewrite: {
           '^': '/api/v1/animeranking/webroot'
         }
+      },
+      '/search': {
+        target: 'https://myanimelist.net:443',
+        changeOrigin: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
