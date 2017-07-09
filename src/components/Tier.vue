@@ -1,5 +1,8 @@
 <template>
   <h1>
+    <div class="handle" v-if="loggedIn">
+      <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
+    </div>
     {{micronode.fields.name}}
     <a v-if="loggedIn" @click="$emit('delete')" class="delete is-medium"></a>
   </h1>

@@ -48,14 +48,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.handle {
-  cursor: move;
-  align-self: center;
-  font-size: 30px;
-  color: lightgrey;
-  width: 20px;
-}
-
 .trophy {
   align-self: center;
   margin-left: 9px;
