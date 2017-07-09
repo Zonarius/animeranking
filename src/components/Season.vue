@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="section">
     <div class="container">
       <div class="content" v-if="restNode">
         <draggable :options="draggableOptions" v-model="restNode.fields.anime" @end="save(restNode)">

@@ -1,16 +1,9 @@
 <template>
-  <div>
-    <div class="field is-grouped">
-      <p class="control is-expanded" :class="{'is-loading': loading}">
-        <v-autocomplete :items="suggestions" v-model="item" :get-label="getLabel" :auto-select-one-item="false" :component-item='template' @change="updateItems" placeholder="Suche..." input-class="input" :disabled="loading">
-        </v-autocomplete>
-      </p>
-      <p class="control">
-        <a @click="add" class="button is-info">
-          Hinzufügen
-        </a>
-      </p>
-    </div>
+  <div class="field is-grouped">
+    <p class="control is-expanded" :class="{'is-loading': loading}">
+      <v-autocomplete :items="suggestions" v-model="item" :get-label="getLabel" :auto-select-one-item="false" :component-item='template' @change="updateItems" placeholder="Suche..." input-class="input" :disabled="loading" @item-selected="add">
+      </v-autocomplete>
+    </p>
   </div>
 </template>
 
@@ -65,9 +58,9 @@ export default {
         }).catch(api.catchCancel)
       }
     },
-    add() {
+    add(item) {
       this.loading = true
-      api.createNode(anime(this.item, this.parentNode)).then(node => {
+      api.createNode(anime(item, this.parentNode)).then(node => {
         this.parentNode.fields.anime.push(reference(node))
         return api.save(this.parentNode)
       }).then(it => {
@@ -81,6 +74,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.v-autocomplete .v-autocomplete-list {
+  position: static;
+}
 </style>
