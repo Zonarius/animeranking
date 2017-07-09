@@ -46,8 +46,8 @@ export default {
       };
     },
     animeCount() {
-      if (this.node.fields.anime) {
-        return this.node.fields.anime.filter(it => it.__typename === 'reference').length;
+      if (this.restNode && this.restNode.fields.anime) {
+        return this.restNode.fields.anime.filter(it => it.microschema.name === 'reference').length;
       } else {
         return 0;
       }
@@ -88,6 +88,13 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss">
+.handle {
+  cursor: move;
+  display: inline-block;
+  align-self: center;
+  font-size: 30px;
+  color: lightgrey;
+  width: 20px;
+}
 </style>
