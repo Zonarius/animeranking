@@ -52,9 +52,17 @@ export default {
   align-self: center;
   margin-left: 9px;
   font-size: 40px;
+  @media screen and (max-width: 425px) {
+    display: none
+  }
   .fa {
     display: block
   }
+}
+
+.title,
+.subtitle {
+  word-break: normal;
 }
 
 .place1 {
@@ -76,5 +84,9 @@ export default {
 
 article:hover .delete {
   opacity: 1;
+}
+
+figure {
+  align-self: center;
 }
 </style>

@@ -73,6 +73,7 @@ export default {
 <style lang="scss" scoped>
 .mycontent {
   min-height: 1080px;
+  overflow-x: scroll;
 }
 
 .hero {
