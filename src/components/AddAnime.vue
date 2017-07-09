@@ -74,7 +74,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .v-autocomplete .v-autocomplete-list {
   position: static;
 }
