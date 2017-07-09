@@ -5,7 +5,6 @@ import App from './App'
 import VueRx from 'vue-rx'
 import Rx from 'rxjs/Rx'
 import Autocomplete from 'v-autocomplete'
-import 'v-autocomplete/dist/v-autocomplete.css'
 
 Vue.config.productionTip = false
 

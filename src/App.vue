@@ -37,6 +37,7 @@ import Season from './components/Season'
 import MyFooter from './components/MyFooter'
 import * as api from './api'
 import 'rxjs/add/operator/map'
+import 'v-autocomplete/dist/v-autocomplete.css'
 
 export default {
   name: 'app',
