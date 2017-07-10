@@ -3,9 +3,6 @@ import axios from 'axios'
 
 const project = 'animeranking'
 const graphql = `/api/v1/${project}/graphql`
-const graphInit = {
-  method: "POST"
-}
 
 const webrootQuery =
   `
@@ -159,12 +156,17 @@ export function deleteNode(uuid) {
 }
 
 let cancelSearch
-export function searchAnime(input) {
+export function searchAnime(keyword) {
   if (cancelSearch) {
     cancelSearch()
   }
-  return axios.get(`/search/prefix.json?type=anime&keyword=${input}&v=1`, {
-    cancelToken: new axios.CancelToken(c => cancelSearch = c)
+  return axios.get(`/search/prefix.json`, {
+    cancelToken: new axios.CancelToken(c => cancelSearch = c),
+    params: {
+      type: "anime",
+      keyword,
+      v: "1"
+    }
   }).then(result => {
     cancelSearch = undefined
     return result.data.categories[0].items
@@ -172,48 +174,30 @@ export function searchAnime(input) {
 }
 
 function get(path) {
-  return fetch(path, {
-    credentials: "same-origin"
-  }).then(resMapper)
+  return axios.get(path).then(resMapper)
 }
 
 function post(path, data) {
-  return fetch(path, {
-    credentials: "same-origin",
-    method: "POST",
+  return axios.post(path, data, {
     headers: {
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
+    }
   }).then(resMapper)
 }
 
 function rdelete(path) {
-  return fetch(path, {
-    method: 'DELETE',
-    credentials: "same-origin"
-  })
+  return axios.delete(path)
 }
 
 function resMapper(res) {
-  return res.json()
-    .then(body => {
-      if (res.ok) {
-        return body
-      } else {
-        return { status: res.status, body }
-      }
-    })
+  return res.data
 }
 
-function query(q, variables) {
-  return fetch(graphql, {
-    ...graphInit,
-    body: JSON.stringify({
-      query: q,
-      variables
-    })
-  }).then(result => result.json())
+function query(query, variables) {
+  return axios.post(graphql, {
+    query,
+    variables
+  }).then(result => result.data)
 }
 
 export function catchCancel(err) {
