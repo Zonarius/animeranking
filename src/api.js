@@ -152,7 +152,9 @@ export function save(node) {
 }
 
 export function downloadBinary(url) {
-  return axios.get(url, {responseType: 'blob'}).then(resMapper)
+  const urlobj = new URL(url)
+
+  return axios.get(urlobj.pathname + urlobj.search, {responseType: 'blob'}).then(resMapper)
 }
 
 export function updateBinary(node, fieldname, blob) {

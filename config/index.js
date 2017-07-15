@@ -42,6 +42,10 @@ module.exports = {
       '/search': {
         target: 'https://myanimelist.net:443',
         changeOrigin: true
+      },
+      '/r/116x76/images/anime': {
+        target: 'https://myanimelist.cdn-dena.com:443',
+        changeOrigin: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
