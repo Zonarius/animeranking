@@ -151,6 +151,18 @@ export function save(node) {
   })
 }
 
+export function downloadBinary(url) {
+  return axios.get(url, {responseType: 'blob'}).then(resMapper)
+}
+
+export function updateBinary(node, fieldname, blob) {
+  const fd = new FormData()
+  fd.append('language', node.language)
+  fd.append('version', node.version)
+  fd.append('binary', blob)
+  return axios.post(`/api/v1/${project}/nodes/${node.uuid}/binary/${fieldname}`, fd).then(resMapper)
+}
+
 export function deleteNode(uuid) {
   return rdelete(`/api/v1/${project}/nodes/${uuid}`)
 }

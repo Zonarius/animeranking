@@ -18,7 +18,6 @@ function anime(mal, parentNode) {
     schema: { name: 'anime' },
     fields: {
       name: mal.name,
-      thumbnailUrl: mal.thumbnail_url,
       malId: String(mal.id),
       malScore: mal.payload.score
     }
@@ -60,11 +59,21 @@ export default {
     },
     add(item) {
       this.loading = true
-      api.createNode(anime(item, this.parentNode)).then(node => {
+      const image$ = api.downloadBinary(item.thumbnail_url)
+      const node$ = api.createNode(anime(item, this.parentNode))
+      const parent$ = node$.then(node => {
         this.parentNode.fields.anime.push(reference(node))
         return api.save(this.parentNode)
       }).then(it => {
         this.parentNode.version = it.version
+      })
+
+      const update$ = Promise.all([image$, node$]).then(([image, node]) => {
+        console.log(image)
+        return api.updateBinary(node, 'thumbnail', image)
+      })
+
+      Promise.all([parent$, update$]).then(() => {
         this.loading = false
         this.item = undefined
         this.suggestions = []

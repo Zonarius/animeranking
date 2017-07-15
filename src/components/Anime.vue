@@ -5,7 +5,7 @@
     </div>
     <figure class="media-left">
       <p class="image">
-        <img :src="node.fields.thumbnailUrl">
+        <img :src="thumbnail">
       </p>
     </figure>
     <div class="media-content">
@@ -33,6 +33,9 @@ export default {
   computed: {
     malLink() {
       return `https://myanimelist.net/anime/${this.node.fields.malId}`;
+    },
+    thumbnail() {
+      return `/api/v1/animeranking/nodes/${this.node.uuid}/binary/thumbnail`
     }
   },
   subscriptions: {
