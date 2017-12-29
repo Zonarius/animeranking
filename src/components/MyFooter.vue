@@ -51,7 +51,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~bulma/sass/utilities/variables.sass";
+@import "~bulma/sass/utilities/initial-variables.sass";
 @media screen and (min-width: $tablet) {
   .login {
     max-width: 300px

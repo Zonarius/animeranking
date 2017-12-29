@@ -34,7 +34,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "~bulma/sass/utilities/variables.sass";
+@import "~bulma/sass/utilities/initial-variables.sass";
 .card-image {
   background-color: $grey-lighter;
 }
