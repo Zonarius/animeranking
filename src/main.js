@@ -5,7 +5,9 @@ import App from './App'
 import VueRx from 'vue-rx'
 import Rx from 'rxjs/Rx'
 import Autocomplete from 'v-autocomplete'
+import Vue2Filters from 'vue2-filters'
 
+Vue.use(Vue2Filters)
 Vue.config.productionTip = false
 
 Vue.use(VueRx, Rx)

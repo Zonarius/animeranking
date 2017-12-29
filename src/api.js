@@ -97,7 +97,7 @@ export var loggedIn = currentUser.map(it => it && it.username !== 'anonymous')
 export var currentNode = Rx.Observable.merge(
   nodeReceived,
   Rx.Observable.fromEvent(window, 'popstate').map(ev => ev.state)
-)
+).shareReplay(1);
 
 export var nodeUpdated = new Rx.Subject()
 

@@ -2,38 +2,28 @@
   <section class="container">
     <div class="columns">
       <div class="column">
-        <LinkCard :link="path('spring')" image="/static/images/spring.jpg">Spring</LinkCard>
+        <SeasonCard season="winter"></SeasonCard>
       </div>
       <div class="column">
-        <LinkCard :link="path('summer')" image="/static/images/summer.jpg">Summer</LinkCard>
+        <SeasonCard season="spring"></SeasonCard>
       </div>
     </div>
     <div class="columns">
       <div class="column">
-        <LinkCard :link="path('fall')" image="/static/images/fall.jpg">Fall</LinkCard>
+        <SeasonCard season="summer"></SeasonCard>
       </div>
       <div class="column">
-        <LinkCard :link="path('winter')" image="/static/images/winter.jpg">Winter</LinkCard>
+        <SeasonCard season="fall"></SeasonCard>
       </div>
     </div>
   </section>
 </template>
 
 <script>
-import LinkCard from './LinkCard'
+import SeasonCard from './SeasonCard'
 export default {
-  name: 'year',
-  props: ['node'],
   components: {
-    LinkCard
-  },
-  methods: {
-    path(season) {
-      return this.node.fields[season] && this.node.fields[season].path
-    }
+    SeasonCard
   }
 }
 </script>
-<style>
-
-</style>

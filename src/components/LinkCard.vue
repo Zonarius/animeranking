@@ -1,8 +1,8 @@
 <template>
-  <a @click.prevent="goto(link)" :href="link">
+  <a @click.prevent="goto(link)" :href="link" :class="{disabled}">
     <div class="card year">
       <div class="card-image">
-        <figure class="image" :class="figureClass">
+        <figure class="image">
           <img :src="image" alt="">
         </figure>
       </div>
@@ -22,7 +22,7 @@ import { goto } from '../api'
 
 export default {
   name: 'LinkCard',
-  props: ['link', 'image', 'figureClass'],
+  props: ['link', 'image', 'figureClass', 'disabled'],
   methods: {
     goto() {
       if (this.link) {
@@ -56,6 +56,13 @@ export default {
     width: auto;
     margin-right: auto;
     margin-left: auto;
+  }
+}
+
+a.disabled {
+  cursor: not-allowed;
+  .year {
+    opacity: 0.3;
   }
 }
 </style>

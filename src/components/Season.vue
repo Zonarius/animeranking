@@ -9,7 +9,7 @@
       </div>
       <section class="section">
         {{animeCount}} Anime gesamt
-      </section class="section">
+      </section>
       <AddToSeason v-if="loggedIn" :parentNode="restNode"></AddToSeason>
     </div>
   </section>
