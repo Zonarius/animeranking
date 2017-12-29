@@ -3,7 +3,7 @@
     <p class="title">Hinzufügen</p>
     <div class="tabs">
       <ul>
-        <li v-for="addComp in addComponents" :key="addComp" :class="{'is-active': currentAddComponent === addComp.component}">
+        <li v-for="addComp in addComponents" :key="addComp.name" :class="{'is-active': currentAddComponent === addComp.component}">
           <a @click="showAdd(addComp.component)">{{addComp.name}}</a>
         </li>
       </ul>
