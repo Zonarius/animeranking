@@ -2,7 +2,7 @@
   <section class="container years">
     <div class="columns">
       <div class="column is-one-third" v-for="year in years" :key="year.uuid">
-        <LinkCard :link="year.path" :image="year.fields.image.path" figureClass="year">
+        <LinkCard :link="year.path" :image="year.fields.image.path">
           {{year.fields.name}}
         </LinkCard>
       </div>
@@ -19,24 +19,23 @@ export default {
   props: ['node'],
   computed: {
     years() {
-      return this.node.children.elements.filter(it => it.fields.__typename === 'year')
-    }
-  },
-  methods: {
-    addYear: function () {
-      console.log("add");
+      return this.node.children.elements.filter(it => it.fields.__typename === 'year').sort(yearSorter)
     }
   },
   components: {
     LinkCard
-  },
-  created: function () {
   }
+}
+
+function yearSorter(a, b) {
+  return -a.fields.name.localeCompare(b.fields.name);
 }
 </script>
 
-<style lang="scss" scoped>
-.add {
-  margin-bottom: 0px;
+<style lang="scss">
+.years .image img {
+  height: 650px;
+  object-fit: cover;
 }
+
 </style>

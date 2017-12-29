@@ -22,7 +22,7 @@ import { goto } from '../api'
 
 export default {
   name: 'LinkCard',
-  props: ['link', 'image', 'figureClass', 'disabled'],
+  props: ['link', 'image', 'disabled'],
   methods: {
     goto() {
       if (this.link) {
